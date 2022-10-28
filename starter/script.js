@@ -28,6 +28,7 @@ class Workout {
 
 // child class running
 class Running extends Workout {
+  type = 'running';
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
     this.cadence = cadence;
@@ -39,6 +40,7 @@ class Running extends Workout {
   }
 }
 class Cycling extends Workout {
+  type = 'cycling';
   constructor(coords, distance, duration, elevationGain) {
     super(coords, distance, duration);
     this.elevationGain = elevationGain;
@@ -135,7 +137,7 @@ class App {
     }
     //ADD NEW OBJECT TO WORKOUT ARRAY[]
     this.#workouts.push(workout);
-    console.log(workout);
+    // console.log(workout);
     //RENDER WORKOUT ON MAP
     // const { lat, lng } = this.#mapEvent.latlng;
     this.renderWorkotMaker(workout);
@@ -150,7 +152,7 @@ class App {
     // DISPLAY MARKER ON THE MAP
   }
   renderWorkotMaker(workout) {
-    L.marker(workout)
+    L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -158,10 +160,10 @@ class App {
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: ` ${type}-popup`,
+          className: ` ${workout.type}-popup`,
         })
       )
-      .setPopupContent(workout.distance)
+      .setPopupContent('workout')
       .openPopup();
   }
 }
