@@ -99,14 +99,10 @@ class App {
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
   _newWorkout(e) {
-    e.preventDefault();
-    const validInputs = function (...inputs) {
+    const validInputs = (...inputs) =>
       inputs.every(inp => Number.isFinite(inp));
-    };
-
-    const allPositive = function (...inputs) {
-      inputs.every(inp => inp > 0);
-    };
+    const allPositive = (...inputs) => inputs.every(inp => inp > 0);
+    e.preventDefault();
     //GET DATA FROM FORM
     const type = inputType.value;
     const distance = +inputDistance.value;
@@ -118,9 +114,6 @@ class App {
       const cadence = +inputCadence.value;
 
       if (
-        // !Number.isFinite(distance) ||
-        // !Number.isFinite(duration) ||
-        // !Number.isFinite(cadence)
         !validInputs(distance, duration, cadence) ||
         !allPositive(distance, duration, cadence)
       )
@@ -130,7 +123,7 @@ class App {
     if (type === 'cycling') {
       const elevation = +inputElevation.value;
       if (
-        !validInputs(distance, duration, cadence) ||
+        !validInputs(distance, duration, elevation) ||
         !allPositive(distance, duration)
       )
         return alert('Input must be positive numbers!');
