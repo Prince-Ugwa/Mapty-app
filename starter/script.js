@@ -57,6 +57,7 @@ console.log(run1, cycling1);
 class App {
   #map;
   #mapEvent;
+  #workouts = [];
   constructor() {
     this._getPosition();
     form.addEventListener('submit', this._newWorkout.bind(this));
@@ -107,6 +108,8 @@ class App {
     const type = inputType.value;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
+    const { lat, lng } = this.#mapEvent.latlng;
+    let workout;
     // CHECK IF THE DATA INPUT IS CORRECT
 
     // IF WORKOUT IS RUNNING, CREATE RUNNING OBJECT
@@ -118,6 +121,7 @@ class App {
         !allPositive(distance, duration, cadence)
       )
         return alert('Input must be positive numbers!');
+      workout = new Running([lat, lng], distance, duration, cadence);
     }
     //IF WORKOUT IS CYCLING, CREATE A CYCLING OBJECT
     if (type === 'cycling') {
@@ -127,24 +131,14 @@ class App {
         !allPositive(distance, duration)
       )
         return alert('Input must be positive numbers!');
+      workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     //ADD NEW OBJECT TO WORKOUT ARRAY[]
-
+    this.#workouts.push(workout);
+    console.log(workout);
     //RENDER WORKOUT ON MAP
-    const { lat, lng } = this.#mapEvent.latlng;
-    L.marker([lat, lng])
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          maxWidth: 250,
-          minWidth: 100,
-          autoClose: false,
-          closeOnClick: false,
-          className: 'running-popup',
-        })
-      )
-      .setPopupContent('EXERCISING')
-      .openPopup();
+    // const { lat, lng } = this.#mapEvent.latlng;
+    this.renderWorkotMaker(workout);
     //RENDER NEW WORKOUT ON LIST
 
     // HIDE FORM AND CLEAR INPUT
@@ -154,6 +148,21 @@ class App {
       inputElevation.value =
         '';
     // DISPLAY MARKER ON THE MAP
+  }
+  renderWorkotMaker(workout) {
+    L.marker(workout)
+      .addTo(this.#map)
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 100,
+          autoClose: false,
+          closeOnClick: false,
+          className: ` ${type}-popup`,
+        })
+      )
+      .setPopupContent(workout.distance)
+      .openPopup();
   }
 }
 
